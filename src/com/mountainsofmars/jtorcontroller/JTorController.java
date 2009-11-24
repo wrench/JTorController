@@ -1,6 +1,8 @@
 package com.mountainsofmars.jtorcontroller;
 
 import org.apache.log4j.Logger;
+
+import java.util.Queue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ArrayBlockingQueue;
 import com.mountainsofmars.jtorcontroller.command.Command;
@@ -14,7 +16,7 @@ public class JTorController {
 
     private static final Logger logger = Logger.getLogger(Application.class);
     private TorProtocolHandler handler;
-    private BlockingQueue<Reply> replyQueue;
+    private Queue<Reply> replyQueue;
     private String host;
     private int port;
     private TorCommunicator tCom;
@@ -41,7 +43,7 @@ public class JTorController {
         handler.sendMessage(cmd.getCommandString());
         try {
         	logger.info("waiting to take from empty BQ :( ...");
-            reply = replyQueue.take();
+            reply = ((ArrayBlockingQueue<Reply>) replyQueue).take();
         } catch(InterruptedException ex) {
             logger.error(ex.getCause().getMessage(), ex.getCause());
         }

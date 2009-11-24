@@ -9,4 +9,6 @@ public interface TorListener {
     public void onConnect();
     
     public void onDisconnect();
+    
+    public void sendEvent(String event);
 }

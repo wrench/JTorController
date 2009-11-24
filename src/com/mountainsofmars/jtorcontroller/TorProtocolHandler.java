@@ -2,6 +2,8 @@ package com.mountainsofmars.jtorcontroller;
 
 import org.jboss.netty.channel.*;
 import org.apache.log4j.Logger;
+
+import java.util.Queue;
 import java.util.concurrent.BlockingQueue;
 import com.mountainsofmars.jtorcontroller.reply.*;
 
@@ -14,15 +16,15 @@ public class TorProtocolHandler extends SimpleChannelHandler {
 
     private static final Logger logger = Logger.getLogger(TorProtocolHandler.class);
     private Channel channel;
-    private BlockingQueue<Reply> replyQueue;
+    private Queue<Reply> replyQueue;
     TorListener listener;
 
-    public TorProtocolHandler(BlockingQueue<Reply> replyQueue, TorListener listener) {
+    public TorProtocolHandler(Queue<Reply> replyQueue, TorListener listener) {
         this.replyQueue = replyQueue;
         this.listener = listener;
     }
 
-    @Override
+	@Override
     public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) {
         String msg = (String) e.getMessage();
         logger.info("Message received from TOR: " + msg);
@@ -34,7 +36,7 @@ public class TorProtocolHandler extends SimpleChannelHandler {
     public void channelConnected(ChannelHandlerContext ctx, ChannelStateEvent e) {
         channel = e.getChannel();
         logger.info("Connected!");
-        listener.onConnect();
+        listener.sendEvent("onConnect");
     }
 
     @Override
