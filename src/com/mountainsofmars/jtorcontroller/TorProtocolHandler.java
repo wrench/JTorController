@@ -4,7 +4,6 @@ import org.jboss.netty.channel.*;
 import org.apache.log4j.Logger;
 
 import java.util.Queue;
-import java.util.concurrent.BlockingQueue;
 import com.mountainsofmars.jtorcontroller.reply.*;
 
 /**
@@ -28,7 +27,6 @@ public class TorProtocolHandler extends SimpleChannelHandler {
     public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) {
         String msg = (String) e.getMessage();
         logger.info("Message received from TOR: " + msg);
-        //replyQueue.offer(new SuccessReply(msg));
         replyQueue.add(new SuccessReply(msg));
     }
 
