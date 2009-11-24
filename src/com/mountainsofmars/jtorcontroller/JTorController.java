@@ -1,7 +1,6 @@
 package com.mountainsofmars.jtorcontroller;
 
 import org.apache.log4j.Logger;
-
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 import com.mountainsofmars.jtorcontroller.command.Command;
@@ -38,7 +37,7 @@ public class JTorController {
 
     public Reply authenticateNoPassword() {
         Reply reply = null;
-        Command cmd = Command.AUTHENTICATE_NO_PASSWORD;
+        Command cmd = Command.AUTHENTICATE;
         handler.sendMessage(cmd.getCommandString());
         try {
         	reply = ((ArrayBlockingQueue<Reply>) replyQueue).take();
@@ -46,6 +45,19 @@ public class JTorController {
             logger.error(ex.getCause().getMessage(), ex.getCause());
         }
         return reply;
+    }
+    
+    public Reply authenticateHashedPassword(String password) {
+    	Reply reply = null;
+    	Command cmd = Command.AUTHENTICATE;
+    	String fullCmdString = cmd.getCommandString() + " \"" + password + "\"";
+    	handler.sendMessage(fullCmdString);
+    	try {
+    		reply = ((ArrayBlockingQueue<Reply>) replyQueue).take(); 
+    	} catch(InterruptedException ex) {
+    		logger.error(ex.getCause().getMessage(), ex.getCause());
+    	}
+    	return reply;
     }
     
 }

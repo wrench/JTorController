@@ -25,9 +25,15 @@ public class TorProtocolHandler extends SimpleChannelHandler {
 
 	@Override
     public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) {
+		Reply reply = null;
         String msg = (String) e.getMessage();
         logger.info("Message received from TOR: " + msg);
-        replyQueue.add(new SuccessReply(msg));
+        if(msg.startsWith("515")) {
+        	reply = new FailureReply(msg);
+        } else {
+        	reply = new SuccessReply(msg);	
+        }
+        replyQueue.add(reply);
     }
 
     @Override
@@ -51,14 +57,6 @@ public class TorProtocolHandler extends SimpleChannelHandler {
         channel.write(cmdString + " \r\n");
         logger.info("sent message: " + cmdString);
     }
-
-//    private FailureReply resolveErrorReply(String response) {
-//        FailureReply reply = null;
-//        if(response.equals("Connection refused")) {
-//            logger.info("message refused");
-//        }
-//        return reply;
-//    }
 }
 
 

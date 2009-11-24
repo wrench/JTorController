@@ -5,6 +5,7 @@ import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 import com.mountainsofmars.jtorcontroller.event.Event;
 import com.mountainsofmars.jtorcontroller.reply.Reply;
+import com.mountainsofmars.jtorcontroller.reply.SuccessReply;
 
 /**
  * Ben Tate
@@ -37,12 +38,26 @@ public class Application implements TorListener {
     }
 
     public void onConnect() {
-    	Reply reply = jtc.authenticateNoPassword();
+    	//Reply reply = jtc.authenticateNoPassword();
+    	Reply reply = jtc.authenticateHashedPassword("scret");
         System.out.println("Reply msg: " + reply.getMessage());
+    	if(reply instanceof SuccessReply) {
+    		onAuthenticationSuccess();
+    	} else {
+    		onAuthenticationFailure();
+    	}
+    }
+    
+    public void onAuthenticationSuccess() {
+    	System.out.println("Authentication Succeeded!");
+    }
+    
+    public void onAuthenticationFailure() {
+    	System.out.println("Authentication Failed!");
     }
 
     public void onDisconnect() {
-        System.out.println("not connected");
+        System.out.println("Disconnected from Tor");
     }
 
 }

@@ -5,12 +5,16 @@ package com.mountainsofmars.jtorcontroller.command;
  * Date: Oct 12, 2009
  */
 public enum Command {
-    AUTHENTICATE_NO_PASSWORD("AUTHENTICATE");
+    AUTHENTICATE("AUTHENTICATE");
 
     private String commandString;
 
     private Command(String commandString) {
         this.commandString = commandString;
+    }
+    
+    private Command(String commandString, String password) {
+    	this.commandString = commandString + " \"" + password + "\"";
     }
 
     public String getCommandString() {
