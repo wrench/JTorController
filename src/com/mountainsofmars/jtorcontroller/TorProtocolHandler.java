@@ -2,7 +2,7 @@ package com.mountainsofmars.jtorcontroller;
 
 import org.jboss.netty.channel.*;
 import org.apache.log4j.Logger;
-
+import com.mountainsofmars.jtorcontroller.event.Event;
 import java.util.Queue;
 import com.mountainsofmars.jtorcontroller.reply.*;
 
@@ -34,7 +34,7 @@ public class TorProtocolHandler extends SimpleChannelHandler {
     public void channelConnected(ChannelHandlerContext ctx, ChannelStateEvent e) {
         channel = e.getChannel();
         logger.info("Connected!");
-        listener.sendEvent("onConnect");
+        listener.sendEvent(Event.ON_CONNECT);
     }
 
     @Override
@@ -43,23 +43,22 @@ public class TorProtocolHandler extends SimpleChannelHandler {
         replyQueue.offer(new FailureReply("FAIL"));
         channel = ex.getChannel();
         channel.close();
-        listener.onDisconnect();
+        listener.sendEvent(Event.ON_DISCONNECT);
         ex.getCause().printStackTrace();
     }
 
     public void sendMessage(String cmdString) {       
         channel.write(cmdString + " \r\n");
-        //channel.write("AUTHENTICATE\r\n");
         logger.info("sent message: " + cmdString);
     }
 
-    private FailureReply resolveErrorReply(String response) {
-        FailureReply reply = null;
-        if(response.equals("Connection refused")) {
-            logger.info("message refused");
-        }
-        return reply;
-    }
+//    private FailureReply resolveErrorReply(String response) {
+//        FailureReply reply = null;
+//        if(response.equals("Connection refused")) {
+//            logger.info("message refused");
+//        }
+//        return reply;
+//    }
 }
 
 

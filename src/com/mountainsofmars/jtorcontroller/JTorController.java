@@ -3,7 +3,6 @@ package com.mountainsofmars.jtorcontroller;
 import org.apache.log4j.Logger;
 
 import java.util.Queue;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ArrayBlockingQueue;
 import com.mountainsofmars.jtorcontroller.command.Command;
 import com.mountainsofmars.jtorcontroller.reply.Reply;
@@ -42,8 +41,7 @@ public class JTorController {
         Command cmd = Command.AUTHENTICATE_NO_PASSWORD;
         handler.sendMessage(cmd.getCommandString());
         try {
-        	logger.info("waiting to take from empty BQ :( ...");
-            reply = ((ArrayBlockingQueue<Reply>) replyQueue).take();
+        	reply = ((ArrayBlockingQueue<Reply>) replyQueue).take();
         } catch(InterruptedException ex) {
             logger.error(ex.getCause().getMessage(), ex.getCause());
         }

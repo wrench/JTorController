@@ -1,5 +1,7 @@
 package com.mountainsofmars.jtorcontroller;
 
+import com.mountainsofmars.jtorcontroller.event.Event;
+
 /**
  * Ben Tate
  * Date: Oct 16, 2009
@@ -10,5 +12,5 @@ public interface TorListener {
     
     public void onDisconnect();
     
-    public void sendEvent(String event);
+    public void sendEvent(Event event);
 }

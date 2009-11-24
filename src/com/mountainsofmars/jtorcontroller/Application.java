@@ -3,6 +3,7 @@ package com.mountainsofmars.jtorcontroller;
 import java.lang.reflect.Method;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
+import com.mountainsofmars.jtorcontroller.event.Event;
 import com.mountainsofmars.jtorcontroller.reply.Reply;
 
 /**
@@ -12,7 +13,7 @@ import com.mountainsofmars.jtorcontroller.reply.Reply;
 public class Application implements TorListener {
 
     private JTorController jtc;
-    private Queue<String> eventQueue;
+    private Queue<Event> eventQueue;
 
     public static void main(String[] args) throws Exception {
         Application app = new Application();        
@@ -22,22 +23,21 @@ public class Application implements TorListener {
     public Application() {
         jtc = new JTorController("127.0.0.1", 9051, this);
         jtc.connect();
-        eventQueue = new LinkedBlockingQueue<String>();
+        eventQueue = new LinkedBlockingQueue<Event>();
     }
     
     private void listenForEvents() throws Exception {
-    	String methodName = ((LinkedBlockingQueue<String>) eventQueue).take();
-    	Method method = this.getClass().getMethod(methodName);
+    	Event evt = ((LinkedBlockingQueue<Event>) eventQueue).take();
+    	Method method = this.getClass().getMethod(evt.getMethodName());
     	method.invoke(this);
     }
     
-    public void sendEvent(String evt) {
+    public void sendEvent(Event evt) {
     	eventQueue.add(evt);
     }
 
     public void onConnect() {
-    	System.out.println("Got inside onConnect method...");
-        Reply reply = jtc.authenticateNoPassword();
+    	Reply reply = jtc.authenticateNoPassword();
         System.out.println("Reply msg: " + reply.getMessage());
     }
 
