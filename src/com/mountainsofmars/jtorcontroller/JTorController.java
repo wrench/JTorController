@@ -40,6 +40,7 @@ public class JTorController {
         Command cmd = Command.AUTHENTICATE_NO_PASSWORD;
         handler.sendMessage(cmd.getCommandString());
         try {
+        	logger.info("waiting to take from empty BQ :( ...");
             reply = replyQueue.take();
         } catch(InterruptedException ex) {
             logger.error(ex.getCause().getMessage(), ex.getCause());

@@ -26,7 +26,8 @@ public class TorProtocolHandler extends SimpleChannelHandler {
     public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) {
         String msg = (String) e.getMessage();
         logger.info("Message received from TOR: " + msg);
-        replyQueue.offer(new SuccessReply(msg));
+        //replyQueue.offer(new SuccessReply(msg));
+        replyQueue.add(new SuccessReply(msg));
     }
 
     @Override
@@ -47,15 +48,15 @@ public class TorProtocolHandler extends SimpleChannelHandler {
     }
 
     public void sendMessage(String cmdString) {       
-        //channel.write(cmdString + "\r\n");
-        channel.write("AUTHENTICATE\r\n");
+        channel.write(cmdString + " \r\n");
+        //channel.write("AUTHENTICATE\r\n");
         logger.info("sent message: " + cmdString);
     }
 
     private FailureReply resolveErrorReply(String response) {
         FailureReply reply = null;
         if(response.equals("Connection refused")) {
-            
+            logger.info("message refused");
         }
         return reply;
     }
