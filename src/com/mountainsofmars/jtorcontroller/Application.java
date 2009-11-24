@@ -39,7 +39,7 @@ public class Application implements TorListener {
 
     public void onConnect() {
     	//Reply reply = jtc.authenticateNoPassword();
-    	Reply reply = jtc.authenticateHashedPassword("scret");
+    	Reply reply = jtc.authenticateHashedPassword("secret");
         System.out.println("Reply msg: " + reply.getMessage());
     	if(reply instanceof SuccessReply) {
     		onAuthenticationSuccess();
@@ -50,10 +50,15 @@ public class Application implements TorListener {
     
     public void onAuthenticationSuccess() {
     	System.out.println("Authentication Succeeded!");
+    	Reply reply = jtc.setConf("Nickname", "wrench");
+    	System.out.println("Reply msg: " + reply.getMessage());
+    	reply = jtc.getConf("Nickname");
+    	System.out.println("Reply msg: " + reply.getMessage());
     }
     
     public void onAuthenticationFailure() {
     	System.out.println("Authentication Failed!");
+    	onDisconnect(); // Tor disconnects clients following a failed authentication attempt.
     }
 
     public void onDisconnect() {

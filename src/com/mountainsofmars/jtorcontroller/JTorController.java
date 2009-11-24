@@ -38,20 +38,37 @@ public class JTorController {
     public Reply authenticateNoPassword() {
         Reply reply = null;
         Command cmd = Command.AUTHENTICATE;
-        handler.sendMessage(cmd.getCommandString());
-        try {
-        	reply = ((ArrayBlockingQueue<Reply>) replyQueue).take();
-        } catch(InterruptedException ex) {
-            logger.error(ex.getCause().getMessage(), ex.getCause());
-        }
-        return reply;
+        return sendMsg(cmd.getCommandString());
     }
     
     public Reply authenticateHashedPassword(String password) {
-    	Reply reply = null;
     	Command cmd = Command.AUTHENTICATE;
-    	String fullCmdString = cmd.getCommandString() + " \"" + password + "\"";
-    	handler.sendMessage(fullCmdString);
+    	String cmdString = cmd.getCommandString() + " \"" + password + "\"";
+    	return sendMsg(cmdString);
+    } 
+    
+    public Reply authenticateCookiePassword() {
+    	//TODO Add method body.
+    	Reply reply = null;
+    	return reply;
+    }
+    
+    public Reply setConf(String property, String value) {
+    	//TODO add varargs for multiple property value pairs.
+    	Command cmd = Command.SETCONF;
+    	String cmdString = cmd.getCommandString() + " " + property + "=" + value;
+    	return sendMsg(cmdString);
+    }
+    
+    public Reply getConf(String property) {
+    	Command cmd = Command.GETCONF;
+    	String cmdString = cmd.getCommandString() + " " + property;
+    	return sendMsg(cmdString);
+    }
+        
+    private Reply sendMsg(String message) {
+    	Reply reply = null;
+    	handler.sendMessage(message);
     	try {
     		reply = ((ArrayBlockingQueue<Reply>) replyQueue).take(); 
     	} catch(InterruptedException ex) {

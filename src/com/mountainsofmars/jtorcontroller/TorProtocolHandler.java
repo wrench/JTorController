@@ -28,10 +28,11 @@ public class TorProtocolHandler extends SimpleChannelHandler {
 		Reply reply = null;
         String msg = (String) e.getMessage();
         logger.info("Message received from TOR: " + msg);
-        if(msg.startsWith("515")) {
+        if(!msg.startsWith("250")) {
         	reply = new FailureReply(msg);
+        	
         } else {
-        	reply = new SuccessReply(msg);	
+        	reply = new SuccessReply(msg);      		
         }
         replyQueue.add(reply);
     }
