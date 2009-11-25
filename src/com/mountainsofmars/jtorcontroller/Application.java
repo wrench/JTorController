@@ -14,27 +14,14 @@ import com.mountainsofmars.jtorcontroller.reply.SuccessReply;
 public class Application implements TorListener {
 
     private JTorController jtc;
-    private Queue<Event> eventQueue;
 
     public static void main(String[] args) throws Exception {
         Application app = new Application();        
-        app.listenForEvents();
     }
     
     public Application() {
         jtc = new JTorController("127.0.0.1", 9051, this);
-        jtc.connect();
-        eventQueue = new LinkedBlockingQueue<Event>();
-    }
-    
-    private void listenForEvents() throws Exception {
-    	Event evt = ((LinkedBlockingQueue<Event>) eventQueue).take();
-    	Method method = this.getClass().getMethod(evt.getMethodName());
-    	method.invoke(this);
-    }
-    
-    public void sendEvent(Event evt) {
-    	eventQueue.add(evt);
+        jtc.connect();  
     }
 
     public void onConnect() {

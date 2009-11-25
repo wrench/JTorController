@@ -13,23 +13,25 @@ import com.mountainsofmars.jtorcontroller.reply.Reply;
 public class JTorController {
 
     private static final Logger logger = Logger.getLogger(Application.class);
+    private EventDispatcher eventDispatcher;
     private TorProtocolHandler handler;
     private Queue<Reply> replyQueue;
     private String host;
     private int port;
     private TorCommunicator tCom;
     private Thread tCThread;
-    private TorListener listener;
 
     public JTorController(String host, int port, TorListener listener) {
+    	eventDispatcher = new EventDispatcher();
+    	EventDispatcher.addListener(listener);
+    	eventDispatcher.run();
         replyQueue = new ArrayBlockingQueue<Reply>(1);
         this.host = host;
         this.port = port;
-        this.listener = listener;
     }
 
     public void connect() {
-        handler = new TorProtocolHandler(replyQueue, listener);
+        handler = new TorProtocolHandler(replyQueue);
         tCom = new TorCommunicator(handler, host, port);
         tCThread = new Thread(tCom);
         tCThread.start();

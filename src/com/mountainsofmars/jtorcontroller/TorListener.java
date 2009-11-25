@@ -12,5 +12,4 @@ public interface TorListener {
     
     public void onDisconnect();
     
-    public void sendEvent(Event event);
 }

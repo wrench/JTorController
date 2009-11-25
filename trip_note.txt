@@ -1,0 +1,168 @@
+your code will have to handle them in another thread so it doesnt lock the handler, but my code (if i want) can spawn a thread to process the event if i dont want to lock up
+[3:12p] [trip]:
+you're writing your own EDT.
+[3:12p] [trip]:
+you can use the queue in the library, that's fine...
+[3:12p] [trip]:
+but application should NEVER be mingled with the library in any "knowledge" / "convention" way. that make sense?
+[3:12p] [trip]:
+application should be treated like you using that B-Tree code...
+[3:13p] [trip]:
+you didnt want the details or read the docs, you just wanted to call insert(), delete(), etc. you didn't have to "know" to setup a queue, pass it in, etc.
+[3:13p] [trip]:
+so you can use the queue setup inside the library, but the library should have a thread that just handles events passed off to listeners
+[3:14p] [trip]:
+that ALSO lets you pass events to more than ONE listener.  The current setup would only allow one application to call.
+[3:14p] [trip]:
+so you need to setup a List<JTorControllerListener> listeners;
+[3:14p] [trip]:
+add an addListener(), removeListener(); method.
+[3:14p] [trip]:
+methods.
+[3:16p] [trip]:
+then in your library you have to setup a 2nd thread to process the events... .dispatchEvent(ConnectionEvent); => uses the EDT to pass it along.  I'd suggest statics
+[3:16p] [trip]:
+it's a mess problem, hehe
+
+
+http://www.jguru.com/faq/view.jsp?EID=8963
+
+so if you have a class just just looped a queue, had a static fireEvent(Event e) method, and a list of listeners to pass them too that should work.
+
+do an instance of ConnectEvent => { for{Listener l : listeners } { listener.onConnect(ConnectEvent e); }
+[3:24p] [trip]:
+wrench: yup
+[3:24p] [trip]:
+or call the addListner(); whichever would work
+[3:25p] [trip]:
+s/instance of/instanceof
+
+nd from your handler just call EventThread.fireEvent(new ConnectionEvent());
+[3:25p] [trip]:
+that would put an event into the queue, the thread would pick it off and process it
+[3:25p] [trip]:
+consumer / producer problem =)
+
+it's look like this in the stack trace
+[3:33p] [trip]:
+[everything is setup, addListener, etc.], k?
+[3:34p]
+wrench
+:
+k
+[3:35p]
+[trip]
+:
+Handler onConnect => EventThread.fireEvent(ConnectionEvent) => _eventQueue.put(event) => EDT.run(waiting on take() => take releases => lookupMethodToCall(Event) => if(e instanceof ConnectionEvent) : true => listener.onConnect()
+[3:35p] [trip]:
+listener => Application
+[3:36p] [trip]:
+so Application.onConnect just got fired from the EDT.
+[3:36p] [trip]:
+the threads that each ran on would look like...
+[3:36p]
+wrench
+:
+i think i'm getting there
+[3:37p]
+[trip]
+:
+Handler onConnect [MAIN] => EventThread.fireEvent(ConnectionEvent) [MAIN] => _eventQueue.put(event) [MAIN]  => EDT.run(waiting on take() [EDT] => take releases [EDT] => lookupMethodToCall(Event) [EDT] => if(e instanceof ConnectionEvent) : true [EDT] => listener.onConnect() [EDT]
+[3:37p]
+wrench
+:
+i actually think i'm getting a better idea
+[3:37p] wrench:
+of how it should work
+[3:38p]
+[trip]
+:
+if the onConnect did something like while(1) {}  and just looped forever your event queue would lock up (in swing that would stop the screen from redrawing)
+[3:38p] [trip]:
+in your case you'd get a lock up like you did before.
+[3:38p]
+wrench
+:
+booo lock up
+[3:38p]
+[trip]
+:
+see how the threads are transferring?
+[3:38p]
+wrench
+:
+sort of
+[3:39p] wrench:
+Ima have to come back to it tonight though :(
+[3:39p]
+[trip]
+:
+that allows the code to run without lock ups like you were seeing
+[3:39p]
+wrench
+:
+cool
+[3:39p]
+[trip]
+:
+cause events 'go away' from the main thread, and if the listeners behave correctly (no long running methods)... the handle onConnect and return, then it runs smooooooth
+[3:40p]
+wrench
+:
+so the EDT ends up calling the methods like onConnect on the listeners?
+[3:40p]
+[trip]
+:
+so the MAIN thread is still handling socket stuff without lock ups and the listeners are responding quickly to the events, life goes on
+[3:40p] [trip]:
+yup
+[3:40p]
+wrench
+:
+sounds beautiful!
+[3:40p] wrench:
+thanks man!
+[3:40p]
+[trip]
+:
+no you coudl REALLY make it smooth, heh
+[3:40p] [trip]:
+but we'll talk about that later =)
+[3:40p]
+wrench
+:
+so...
+[3:40p]
+[trip]
+:
+you could release an event library for java CLI
+[3:41p] [trip]:
+that'd be fucking sweet, heh
+[3:41p]
+wrench
+:
+that sounds RAD
+[3:41p]
+[trip]
+:
+simple code, heh
+[3:41p] [trip]:
+just need a listener interface, dispatchEvent().
+[3:41p] [trip]:
+listener.handleEvent(Event e) (returns a boolean if the listener wants to handle the event)
+[3:42p]
+wrench
+:
+oh snap
+[3:42p]
+[trip]
+:
+if so pass the Event along to the listener... if not move to next listener
+[3:42p]
+wrench
+:
+that seems tits
+[3:42p] wrench:
+nice!
+
+might i suggest that you next commands: 1) allow people to tell TOR to switch routes, 2) limit TOR to a single route, and 3) tell TOR to keep using a route?
