@@ -1,6 +1,6 @@
 package com.mountainsofmars.jtorcontroller;
 
-import com.mountainsofmars.jtorcontroller.event.Event;
+import com.mountainsofmars.jtorcontroller.listenerevent.ListenerEvent;
 
 /**
  * Ben Tate

@@ -1,9 +1,5 @@
 package com.mountainsofmars.jtorcontroller;
 
-import java.lang.reflect.Method;
-import java.util.Queue;
-import java.util.concurrent.LinkedBlockingQueue;
-import com.mountainsofmars.jtorcontroller.event.Event;
 import com.mountainsofmars.jtorcontroller.reply.Reply;
 import com.mountainsofmars.jtorcontroller.reply.SuccessReply;
 
@@ -37,10 +33,17 @@ public class Application implements TorListener {
     
     public void onAuthenticationSuccess() {
     	System.out.println("Authentication Succeeded!");
-    	Reply reply = jtc.setConf("Nickname", "wrench");
+    	//Reply reply = jtc.setConf("Nickname", "wrench");
+    	//Reply reply = jtc.setConf("MaxCircuitDirtiness", "100");
+    	//System.out.println("Reply msg: " + reply.getMessage());
+    	//reply = jtc.getConf("Nickname");
+    	//reply = jtc.getConf("MaxCircuitDirtiness");
+    	//System.out.println("Reply msg: " + reply.getMessage());
+    	//Reply reply = jtc.setEvents("CIRC", "STREAM", "ORCONN");
+    	//Reply reply = jtc.saveConf();
+    	Reply reply = jtc.signal("RELOAD");
     	System.out.println("Reply msg: " + reply.getMessage());
-    	reply = jtc.getConf("Nickname");
-    	System.out.println("Reply msg: " + reply.getMessage());
+    	
     }
     
     public void onAuthenticationFailure() {

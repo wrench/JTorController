@@ -24,7 +24,7 @@ public class JTorController {
     public JTorController(String host, int port, TorListener listener) {
     	eventDispatcher = new EventDispatcher();
     	EventDispatcher.addListener(listener);
-    	eventDispatcher.run();
+    	eventDispatcher.start();
         replyQueue = new ArrayBlockingQueue<Reply>(1);
         this.host = host;
         this.port = port;
@@ -65,6 +65,28 @@ public class JTorController {
     public Reply getConf(String property) {
     	Command cmd = Command.GETCONF;
     	String cmdString = cmd.getCommandString() + " " + property;
+    	return sendMsg(cmdString);
+    }
+    
+    public Reply setEvents(String... properties) {
+    	Command cmd = Command.SETEVENTS;
+    	StringBuilder cmdString = new StringBuilder(cmd.getCommandString());
+    	for(String property : properties) {
+    		cmdString.append(" ");
+    		cmdString.append(property);
+    	}
+    	return sendMsg(cmdString.toString());
+    }
+    
+    public Reply saveConf() {
+    	Command cmd = Command.SAVECONF;
+    	String cmdString = cmd.getCommandString();
+    	return sendMsg(cmdString);
+    }
+    
+    public Reply signal(String property) {
+    	Command cmd = Command.SIGNAL;
+    	String cmdString = cmd.getCommandString() + " " + property + " NEWNYM";
     	return sendMsg(cmdString);
     }
         

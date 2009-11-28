@@ -5,7 +5,7 @@ package com.mountainsofmars.jtorcontroller.command;
  * Date: Oct 12, 2009
  */
 public enum Command {
-    AUTHENTICATE("AUTHENTICATE"), SETCONF("SETCONF"), GETCONF("GETCONF");
+    AUTHENTICATE("AUTHENTICATE"), SETCONF("SETCONF"), GETCONF("GETCONF"), SETEVENTS("SETEVENTS"), SAVECONF("SAVECONF"), SIGNAL("SIGNAL");
 
     private String commandString;
 

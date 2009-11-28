@@ -2,9 +2,9 @@ package com.mountainsofmars.jtorcontroller;
 
 import org.jboss.netty.channel.*;
 import org.apache.log4j.Logger;
-import com.mountainsofmars.jtorcontroller.event.Event;
 import java.util.Queue;
-import java.util.concurrent.LinkedBlockingQueue;
+
+import com.mountainsofmars.jtorcontroller.listenerevent.ListenerEvent;
 import com.mountainsofmars.jtorcontroller.reply.*;
 
 /**
@@ -17,7 +17,6 @@ public class TorProtocolHandler extends SimpleChannelHandler {
     private static final Logger logger = Logger.getLogger(TorProtocolHandler.class);
     private Channel channel;
     private Queue<Reply> replyQueue;
-    
     
     public TorProtocolHandler(Queue<Reply> replyQueue) {
         this.replyQueue = replyQueue;
@@ -41,7 +40,7 @@ public class TorProtocolHandler extends SimpleChannelHandler {
     public void channelConnected(ChannelHandlerContext ctx, ChannelStateEvent e) {
         channel = e.getChannel();
         logger.info("Connected!");
-        EventDispatcher.fireEvent(Event.ON_CONNECT);
+        EventDispatcher.fireEvent(ListenerEvent.ON_CONNECT);
     }
 
     @Override
@@ -50,7 +49,7 @@ public class TorProtocolHandler extends SimpleChannelHandler {
         replyQueue.offer(new FailureReply("Exception Caught!"));
         channel = ex.getChannel();
         channel.close();
-        EventDispatcher.fireEvent(Event.ON_DISCONNECT);
+        EventDispatcher.fireEvent(ListenerEvent.ON_DISCONNECT);
         ex.getCause().printStackTrace();
     }
 
