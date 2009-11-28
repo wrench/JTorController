@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 import com.mountainsofmars.jtorcontroller.command.Command;
+import com.mountainsofmars.jtorcontroller.reply.FailureReply;
 import com.mountainsofmars.jtorcontroller.reply.Reply;
 
 /**
@@ -43,7 +44,7 @@ public class JTorController {
         return sendMsg(cmd.getCommandString());
     }
     
-    public Reply authenticateHashedPassword(String password) {
+    public Reply authenticateHashedPassword(String password) { // Might should change this to an overloaded version.
     	Command cmd = Command.AUTHENTICATE;
     	String cmdString = cmd.getCommandString() + " \"" + password + "\"";
     	return sendMsg(cmdString);
@@ -56,8 +57,7 @@ public class JTorController {
     }
     
     public Reply setConf(String property, String value) {
-    	//TODO add varargs for multiple property value pairs.
-    	Command cmd = Command.SETCONF;
+    	Command cmd = Command.SETCONF; //TODO Add varargs for multiple property value pairs.
     	String cmdString = cmd.getCommandString() + " " + property + "=" + value;
     	return sendMsg(cmdString);
     }
@@ -68,7 +68,7 @@ public class JTorController {
     	return sendMsg(cmdString);
     }
     
-    public Reply setEvents(String... properties) {
+    public Reply setEvents(String... properties) { //TODO Floods BQ even with one keyword.
     	Command cmd = Command.SETEVENTS;
     	StringBuilder cmdString = new StringBuilder(cmd.getCommandString());
     	for(String property : properties) {
@@ -84,9 +84,20 @@ public class JTorController {
     	return sendMsg(cmdString);
     }
     
-    public Reply signal(String property) {
+    public Reply signal(String property) { //TODO Add varargs for multiple properties.
     	Command cmd = Command.SIGNAL;
-    	String cmdString = cmd.getCommandString() + " " + property + " NEWNYM";
+    	String cmdString = cmd.getCommandString() + " " + property;
+    	return sendMsg(cmdString);
+    }
+    
+    public Reply mapAddress(String oldAddress, String newAddress) {
+    	//TODO Implement method.
+    	return new FailureReply("Fix ME");
+    }
+    
+    public Reply getInfo(String keyword) { //TODO Floods BQ even with one keyword. Add varargs for multiple keywords.
+    	Command cmd = Command.GETINFO;
+    	String cmdString = cmd.getCommandString() + " " + keyword;
     	return sendMsg(cmdString);
     }
         

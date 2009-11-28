@@ -41,7 +41,8 @@ public class Application implements TorListener {
     	//System.out.println("Reply msg: " + reply.getMessage());
     	//Reply reply = jtc.setEvents("CIRC", "STREAM", "ORCONN");
     	//Reply reply = jtc.saveConf();
-    	Reply reply = jtc.signal("RELOAD");
+    	//Reply reply = jtc.signal("RELOAD");
+    	Reply reply = jtc.getInfo("version config-file");
     	System.out.println("Reply msg: " + reply.getMessage());
     	
     }
