@@ -6,6 +6,8 @@ import java.util.concurrent.ArrayBlockingQueue;
 import com.mountainsofmars.jtorcontroller.command.Command;
 import com.mountainsofmars.jtorcontroller.reply.FailureReply;
 import com.mountainsofmars.jtorcontroller.reply.Reply;
+import com.mountainsofmars.jtorcontroller.setevent.SetEvent;
+import com.mountainsofmars.jtorcontroller.signal.Signal;
 
 /**
  * Ben Tate
@@ -38,42 +40,52 @@ public class JTorController {
         tCThread.start();
     }
 
-    public Reply authenticateNoPassword() {
+    public Reply authenticate() {
         Reply reply = null;
         Command cmd = Command.AUTHENTICATE;
         return sendMsg(cmd.getCommandString());
     }
     
-    public Reply authenticateHashedPassword(String password) { // Might should change this to an overloaded version.
+    public Reply authenticate(String password) {
     	Command cmd = Command.AUTHENTICATE;
     	String cmdString = cmd.getCommandString() + " \"" + password + "\"";
     	return sendMsg(cmdString);
     } 
     
     public Reply authenticateCookiePassword() {
-    	//TODO Add method body.
+    	//TODO Add method body. This does not work.
     	Reply reply = null;
     	return reply;
     }
     
-    public Reply setConf(String property, String value) {
+    public Reply setConf(String keyword, String value) {
     	Command cmd = Command.SETCONF; //TODO Add varargs for multiple property value pairs.
-    	String cmdString = cmd.getCommandString() + " " + property + "=" + value;
+    	String cmdString = cmd.getCommandString() + " " + keyword + "=" + value;
     	return sendMsg(cmdString);
     }
     
-    public Reply getConf(String property) {
+    public Reply getConf(String keyword) {
     	Command cmd = Command.GETCONF;
-    	String cmdString = cmd.getCommandString() + " " + property;
+    	String cmdString = cmd.getCommandString() + " " + keyword;
     	return sendMsg(cmdString);
     }
     
-    public Reply setEvents(String... properties) { //TODO Floods BQ even with one keyword.
+    public Reply setEvents(SetEvent... setEvents) {
     	Command cmd = Command.SETEVENTS;
     	StringBuilder cmdString = new StringBuilder(cmd.getCommandString());
-    	for(String property : properties) {
+    	for(SetEvent curSetEvent : setEvents) {
     		cmdString.append(" ");
-    		cmdString.append(property);
+    		cmdString.append(curSetEvent.getsetEventString());
+    	}
+    	return sendMsg(cmdString.toString());
+    }
+    
+    public Reply setEvents(String... setEvents) {
+    	Command cmd = Command.SETEVENTS;
+    	StringBuilder cmdString = new StringBuilder(cmd.getCommandString());
+    	for(String setEvent : setEvents) {
+    		cmdString.append(" ");
+    		cmdString.append(setEvent);
     	}
     	return sendMsg(cmdString.toString());
     }
@@ -84,10 +96,24 @@ public class JTorController {
     	return sendMsg(cmdString);
     }
     
-    public Reply signal(String property) { //TODO Add varargs for multiple properties.
+    public Reply signal(Signal... signals) { 
     	Command cmd = Command.SIGNAL;
-    	String cmdString = cmd.getCommandString() + " " + property;
-    	return sendMsg(cmdString);
+    	StringBuilder cmdString = new StringBuilder(cmd.getCommandString());
+    	for(Signal signal : signals) {
+    		cmdString.append(" ");
+    		cmdString.append(signal.getSignalString());
+    	}
+    	return sendMsg(cmdString.toString());
+    }
+    
+    public Reply signal(String... signals) { 
+    	Command cmd = Command.SIGNAL;
+    	StringBuilder cmdString = new StringBuilder(cmd.getCommandString());
+    	for(String signal : signals) {
+    		cmdString.append(" ");
+    		cmdString.append(signal);
+    	}
+    	return sendMsg(cmdString.toString());
     }
     
     public Reply mapAddress(String oldAddress, String newAddress) {
@@ -95,7 +121,7 @@ public class JTorController {
     	return new FailureReply("Fix ME");
     }
     
-    public Reply getInfo(String keyword) { //TODO Floods BQ even with one keyword. Add varargs for multiple keywords.
+    public Reply getInfo(String keyword) { //TODO Floods BQ even with one keyword.
     	Command cmd = Command.GETINFO;
     	String cmdString = cmd.getCommandString() + " " + keyword;
     	return sendMsg(cmdString);

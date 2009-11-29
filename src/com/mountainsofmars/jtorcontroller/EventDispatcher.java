@@ -5,13 +5,13 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import com.mountainsofmars.jtorcontroller.listenerevent.ListenerEvent;
+import com.mountainsofmars.jtorcontroller.listenerevent.TorListenerEvent;
 
 public class EventDispatcher extends Thread {
 	private static List<TorListener> listeners = new ArrayList<TorListener>();
-	private static Queue<ListenerEvent> eventQueue = new LinkedBlockingQueue<ListenerEvent>();
+	private static Queue<TorListenerEvent> eventQueue = new LinkedBlockingQueue<TorListenerEvent>();
 
-	static void fireEvent(ListenerEvent evt) {
+	static void fireEvent(TorListenerEvent evt) {
 		eventQueue.add(evt);
 	}
 	
@@ -20,17 +20,17 @@ public class EventDispatcher extends Thread {
 	}
 	
 	public void run() {
-		ListenerEvent evt = null;
+		TorListenerEvent evt = null;
 		while(true) {
 			try {
-				evt = ((LinkedBlockingQueue<ListenerEvent>) eventQueue).take();
+				evt = ((LinkedBlockingQueue<TorListenerEvent>) eventQueue).take();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 			for(TorListener tl : listeners) {
-				if(evt.equals(ListenerEvent.ON_CONNECT)) {
+				if(evt.equals(TorListenerEvent.ON_CONNECT)) {
 					tl.onConnect();
-				} else if(evt.equals(ListenerEvent.ON_DISCONNECT)) {
+				} else if(evt.equals(TorListenerEvent.ON_DISCONNECT)) {
 					tl.onDisconnect();
 				}
 			}

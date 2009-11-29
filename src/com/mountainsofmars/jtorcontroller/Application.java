@@ -21,8 +21,8 @@ public class Application implements TorListener {
     }
 
     public void onConnect() {
-    	//Reply reply = jtc.authenticateNoPassword();
-    	Reply reply = jtc.authenticateHashedPassword("secret");
+    	//Reply reply = jtc.authenticate();
+    	Reply reply = jtc.authenticate("secret");
         System.out.println("Reply msg: " + reply.getMessage());
     	if(reply instanceof SuccessReply) {
     		onAuthenticationSuccess();
@@ -40,9 +40,11 @@ public class Application implements TorListener {
     	//reply = jtc.getConf("MaxCircuitDirtiness");
     	//System.out.println("Reply msg: " + reply.getMessage());
     	//Reply reply = jtc.setEvents("CIRC", "STREAM", "ORCONN");
+    	Reply reply = jtc.setEvents("INFO");
     	//Reply reply = jtc.saveConf();
     	//Reply reply = jtc.signal("RELOAD");
-    	Reply reply = jtc.getInfo("version config-file");
+    	//Reply reply = jtc.getInfo("config-file");
+    	//Reply reply = jtc.getInfo("version");
     	System.out.println("Reply msg: " + reply.getMessage());
     	
     }

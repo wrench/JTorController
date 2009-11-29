@@ -13,10 +13,6 @@ public enum Command {
         this.commandString = commandString;
     }
     
-    private Command(String commandString, String password) {
-    	this.commandString = commandString + " \"" + password + "\"";
-    }
-
     public String getCommandString() {
         return commandString;
     }

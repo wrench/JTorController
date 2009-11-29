@@ -4,7 +4,7 @@ import org.jboss.netty.channel.*;
 import org.apache.log4j.Logger;
 import java.util.Queue;
 
-import com.mountainsofmars.jtorcontroller.listenerevent.ListenerEvent;
+import com.mountainsofmars.jtorcontroller.listenerevent.TorListenerEvent;
 import com.mountainsofmars.jtorcontroller.reply.*;
 
 /**
@@ -40,7 +40,7 @@ public class TorProtocolHandler extends SimpleChannelHandler {
     public void channelConnected(ChannelHandlerContext ctx, ChannelStateEvent e) {
         channel = e.getChannel();
         logger.info("Connected!");
-        EventDispatcher.fireEvent(ListenerEvent.ON_CONNECT);
+        EventDispatcher.fireEvent(TorListenerEvent.ON_CONNECT);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class TorProtocolHandler extends SimpleChannelHandler {
         replyQueue.offer(new FailureReply("Exception Caught!"));
         channel = ex.getChannel();
         channel.close();
-        EventDispatcher.fireEvent(ListenerEvent.ON_DISCONNECT);
+        EventDispatcher.fireEvent(TorListenerEvent.ON_DISCONNECT);
         ex.getCause().printStackTrace();
     }
 
