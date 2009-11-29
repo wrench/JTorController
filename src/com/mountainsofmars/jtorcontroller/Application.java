@@ -2,12 +2,13 @@ package com.mountainsofmars.jtorcontroller;
 
 import com.mountainsofmars.jtorcontroller.reply.Reply;
 import com.mountainsofmars.jtorcontroller.reply.SuccessReply;
+import com.mountainsofmars.jtorcontroller.setevent.SetEvent;
 
 /**
  * Ben Tate
  * Date: Oct 13, 2009
  */
-public class Application implements TorListener {
+public class Application implements TorListener, InfoListener {
 
     private JTorController jtc;
 
@@ -20,6 +21,7 @@ public class Application implements TorListener {
         jtc.connect();  
     }
 
+    @Override
     public void onConnect() {
     	//Reply reply = jtc.authenticate();
     	Reply reply = jtc.authenticate("secret");
@@ -39,13 +41,13 @@ public class Application implements TorListener {
     	//reply = jtc.getConf("Nickname");
     	//reply = jtc.getConf("MaxCircuitDirtiness");
     	//System.out.println("Reply msg: " + reply.getMessage());
-    	//Reply reply = jtc.setEvents("CIRC", "STREAM", "ORCONN");
-    	Reply reply = jtc.setEvents("INFO");
+    	//Reply reply = jtc.setEvents(this, "CIRC", "STREAM", "ORCONN");
+    	Reply reply = jtc.setEvents(this, SetEvent.INFO, SetEvent.CIRC, SetEvent.BW);
     	//Reply reply = jtc.saveConf();
     	//Reply reply = jtc.signal("RELOAD");
     	//Reply reply = jtc.getInfo("config-file");
     	//Reply reply = jtc.getInfo("version");
-    	System.out.println("Reply msg: " + reply.getMessage());
+    	//System.out.println("Reply msg: " + reply.getMessage());
     	
     }
     
@@ -53,9 +55,15 @@ public class Application implements TorListener {
     	System.out.println("Authentication Failed!");
     	onDisconnect(); // Tor disconnects clients following a failed authentication attempt.
     }
-
+    
+    @Override
     public void onDisconnect() {
         System.out.println("Disconnected from Tor");
     }
+
+	@Override
+	public void handleInfoMessage(String message) {
+		System.out.println("INFO_LISTENER: " + message);
+	}
 
 }

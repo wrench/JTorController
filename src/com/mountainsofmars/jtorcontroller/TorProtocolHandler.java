@@ -3,7 +3,6 @@ package com.mountainsofmars.jtorcontroller;
 import org.jboss.netty.channel.*;
 import org.apache.log4j.Logger;
 import java.util.Queue;
-
 import com.mountainsofmars.jtorcontroller.listenerevent.TorListenerEvent;
 import com.mountainsofmars.jtorcontroller.reply.*;
 
@@ -27,11 +26,13 @@ public class TorProtocolHandler extends SimpleChannelHandler {
 		Reply reply = null;
         String msg = (String) e.getMessage();
         logger.info("Message received from TOR: " + msg);
-        if(!msg.startsWith("250")) {
-        	reply = new FailureReply(msg);
-        	
+        if(msg.startsWith("650")) {
+        	InfoMessageDispatcher.queueMessage(msg);
+        	return;
+        } else if(msg.startsWith("250")) {
+        	reply = new SuccessReply(msg); 
         } else {
-        	reply = new SuccessReply(msg);      		
+        	reply = new FailureReply(msg);
         }
         replyQueue.add(reply);
     }

@@ -3,11 +3,11 @@ package com.mountainsofmars.jtorcontroller;
 import org.apache.log4j.Logger;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
-import com.mountainsofmars.jtorcontroller.command.Command;
 import com.mountainsofmars.jtorcontroller.reply.FailureReply;
 import com.mountainsofmars.jtorcontroller.reply.Reply;
 import com.mountainsofmars.jtorcontroller.setevent.SetEvent;
 import com.mountainsofmars.jtorcontroller.signal.Signal;
+import com.mountainsofmars.jtorcontroller.torcommand.TorCommand;
 
 /**
  * Ben Tate
@@ -17,6 +17,7 @@ public class JTorController {
 
     private static final Logger logger = Logger.getLogger(Application.class);
     private EventDispatcher eventDispatcher;
+    private InfoMessageDispatcher infoMessageDispatcher;
     private TorProtocolHandler handler;
     private Queue<Reply> replyQueue;
     private String host;
@@ -42,12 +43,12 @@ public class JTorController {
 
     public Reply authenticate() {
         Reply reply = null;
-        Command cmd = Command.AUTHENTICATE;
+        TorCommand cmd = TorCommand.AUTHENTICATE;
         return sendMsg(cmd.getCommandString());
     }
     
     public Reply authenticate(String password) {
-    	Command cmd = Command.AUTHENTICATE;
+    	TorCommand cmd = TorCommand.AUTHENTICATE;
     	String cmdString = cmd.getCommandString() + " \"" + password + "\"";
     	return sendMsg(cmdString);
     } 
@@ -59,19 +60,20 @@ public class JTorController {
     }
     
     public Reply setConf(String keyword, String value) {
-    	Command cmd = Command.SETCONF; //TODO Add varargs for multiple property value pairs.
+    	TorCommand cmd = TorCommand.SETCONF; //TODO Add varargs for multiple property value pairs, maybe?
     	String cmdString = cmd.getCommandString() + " " + keyword + "=" + value;
     	return sendMsg(cmdString);
     }
     
     public Reply getConf(String keyword) {
-    	Command cmd = Command.GETCONF;
+    	TorCommand cmd = TorCommand.GETCONF;
     	String cmdString = cmd.getCommandString() + " " + keyword;
     	return sendMsg(cmdString);
     }
     
-    public Reply setEvents(SetEvent... setEvents) {
-    	Command cmd = Command.SETEVENTS;
+    public Reply setEvents(InfoListener listener, SetEvent... setEvents) {
+    	addInfoListener(listener);
+    	TorCommand cmd = TorCommand.SETEVENTS;
     	StringBuilder cmdString = new StringBuilder(cmd.getCommandString());
     	for(SetEvent curSetEvent : setEvents) {
     		cmdString.append(" ");
@@ -80,8 +82,9 @@ public class JTorController {
     	return sendMsg(cmdString.toString());
     }
     
-    public Reply setEvents(String... setEvents) {
-    	Command cmd = Command.SETEVENTS;
+    public Reply setEvents(InfoListener listener, String... setEvents) {
+    	addInfoListener(listener);
+    	TorCommand cmd = TorCommand.SETEVENTS;
     	StringBuilder cmdString = new StringBuilder(cmd.getCommandString());
     	for(String setEvent : setEvents) {
     		cmdString.append(" ");
@@ -90,14 +93,24 @@ public class JTorController {
     	return sendMsg(cmdString.toString());
     }
     
+    private void addInfoListener(InfoListener listener) {
+    	if(infoMessageDispatcher == null) {
+    		infoMessageDispatcher = new InfoMessageDispatcher();
+    		InfoMessageDispatcher.addListener(listener);
+    		infoMessageDispatcher.start();
+    	} else {
+    		InfoMessageDispatcher.addListener(listener);
+    	}
+    }
+    
     public Reply saveConf() {
-    	Command cmd = Command.SAVECONF;
+    	TorCommand cmd = TorCommand.SAVECONF;
     	String cmdString = cmd.getCommandString();
     	return sendMsg(cmdString);
     }
     
     public Reply signal(Signal... signals) { 
-    	Command cmd = Command.SIGNAL;
+    	TorCommand cmd = TorCommand.SIGNAL;
     	StringBuilder cmdString = new StringBuilder(cmd.getCommandString());
     	for(Signal signal : signals) {
     		cmdString.append(" ");
@@ -107,7 +120,7 @@ public class JTorController {
     }
     
     public Reply signal(String... signals) { 
-    	Command cmd = Command.SIGNAL;
+    	TorCommand cmd = TorCommand.SIGNAL;
     	StringBuilder cmdString = new StringBuilder(cmd.getCommandString());
     	for(String signal : signals) {
     		cmdString.append(" ");
@@ -122,7 +135,7 @@ public class JTorController {
     }
     
     public Reply getInfo(String keyword) { //TODO Floods BQ even with one keyword.
-    	Command cmd = Command.GETINFO;
+    	TorCommand cmd = TorCommand.GETINFO;
     	String cmdString = cmd.getCommandString() + " " + keyword;
     	return sendMsg(cmdString);
     }
