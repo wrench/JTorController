@@ -6,4 +6,6 @@ public interface TorListener {
     
     public void onDisconnect();
     
+    public void handleInfoMessage(String message);
+    
 }

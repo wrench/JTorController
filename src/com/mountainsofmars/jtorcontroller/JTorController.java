@@ -13,7 +13,6 @@ public class JTorController {
 
     private static final Logger logger = Logger.getLogger(Application.class);
     private EventDispatcher eventDispatcher;
-    private InfoMessageDispatcher infoMessageDispatcher;
     private TorProtocolHandler handler;
     private Queue<Reply> replyQueue;
     private String host;
@@ -67,8 +66,7 @@ public class JTorController {
     	return sendMsg(cmdString);
     }
     
-    public Reply setEvents(InfoListener listener, SetEvent... setEvents) {
-    	addInfoListener(listener);
+    public Reply setEvents(SetEvent... setEvents) {
     	TorCommand cmd = TorCommand.SETEVENTS;
     	StringBuilder cmdString = new StringBuilder(cmd.getCommandString());
     	for(SetEvent curSetEvent : setEvents) {
@@ -78,8 +76,7 @@ public class JTorController {
     	return sendMsg(cmdString.toString());
     }
     
-    public Reply setEvents(InfoListener listener, String... setEvents) {
-    	addInfoListener(listener);
+    public Reply setEvents(String... setEvents) {
     	TorCommand cmd = TorCommand.SETEVENTS;
     	StringBuilder cmdString = new StringBuilder(cmd.getCommandString());
     	for(String setEvent : setEvents) {
@@ -87,16 +84,6 @@ public class JTorController {
     		cmdString.append(setEvent);
     	}
     	return sendMsg(cmdString.toString());
-    }
-    
-    private void addInfoListener(InfoListener listener) {
-    	if(infoMessageDispatcher == null) {
-    		infoMessageDispatcher = new InfoMessageDispatcher();
-    		InfoMessageDispatcher.addListener(listener);
-    		infoMessageDispatcher.start();
-    	} else {
-    		InfoMessageDispatcher.addListener(listener);
-    	}
     }
     
     public Reply saveConf() {

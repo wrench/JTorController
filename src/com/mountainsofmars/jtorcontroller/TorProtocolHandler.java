@@ -3,7 +3,9 @@ package com.mountainsofmars.jtorcontroller;
 import org.jboss.netty.channel.*;
 import org.apache.log4j.Logger;
 import java.util.Queue;
+
 import com.mountainsofmars.jtorcontroller.listenerevent.TorListenerEvent;
+import com.mountainsofmars.jtorcontroller.listenerevent.TorListenerEventType;
 import com.mountainsofmars.jtorcontroller.reply.*;
 
 @ChannelPipelineCoverage("one")
@@ -23,7 +25,7 @@ public class TorProtocolHandler extends SimpleChannelHandler {
         String msg = (String) e.getMessage();
         logger.info("Message received from TOR: " + msg);
         if(msg.startsWith("650")) {
-        	InfoMessageDispatcher.queueMessage(msg);
+        	EventDispatcher.fireEvent(new TorListenerEvent(TorListenerEventType.INFO_MESSAGE, msg));
         	return;
         } else if(msg.startsWith("250")) {
         	reply = new SuccessReply(msg); 
@@ -37,7 +39,7 @@ public class TorProtocolHandler extends SimpleChannelHandler {
     public void channelConnected(ChannelHandlerContext ctx, ChannelStateEvent e) {
         channel = e.getChannel();
         logger.info("Connected!");
-        EventDispatcher.fireEvent(TorListenerEvent.ON_CONNECT);
+        EventDispatcher.fireEvent(new TorListenerEvent(TorListenerEventType.ON_CONNECT));
     }
 
     @Override
@@ -46,7 +48,7 @@ public class TorProtocolHandler extends SimpleChannelHandler {
         replyQueue.offer(new FailureReply("Exception Caught!"));
         channel = ex.getChannel();
         channel.close();
-        EventDispatcher.fireEvent(TorListenerEvent.ON_DISCONNECT);
+        EventDispatcher.fireEvent(new TorListenerEvent(TorListenerEventType.ON_DISCONNECT));
         ex.getCause().printStackTrace();
     }
 

@@ -3,12 +3,9 @@ package com.mountainsofmars.jtorcontroller;
 import com.mountainsofmars.jtorcontroller.reply.Reply;
 import com.mountainsofmars.jtorcontroller.reply.SuccessReply;
 import com.mountainsofmars.jtorcontroller.setevent.SetEvent;
+import com.mountainsofmars.jtorcontroller.signal.Signal;
 
-/**
- * Ben Tate
- * Date: Oct 13, 2009
- */
-public class Application implements TorListener, InfoListener {
+public class Application implements TorListener {
 
     private JTorController jtc;
 
@@ -43,9 +40,10 @@ public class Application implements TorListener, InfoListener {
     	//System.out.println("Reply msg: " + reply.getMessage());
     	//Reply reply = jtc.setEvents(this, "CIRC", "STREAM", "ORCONN");
     	//Reply reply = jtc.setEvents(this, SetEvent.INFO, SetEvent.CIRC, SetEvent.BW);
-    	Reply reply = jtc.setEvents(this, SetEvent.CIRC, SetEvent.STREAM, SetEvent.ORCONN, SetEvent.BW, SetEvent.DEBUG, SetEvent.INFO, SetEvent.NOTICE, SetEvent.WARN, SetEvent.ERR, SetEvent.NEWDESC, SetEvent.ADDRMAP, SetEvent.AUTHDIR_NEWDESCS, SetEvent.DESCCHANGED, SetEvent.STATUS_GENERAL, SetEvent.STATUS_CLIENT, SetEvent.STATUS_SERVER, SetEvent.GUARD, SetEvent.NS, SetEvent.STREAM_BW, SetEvent.CLIENTS_SEEN, SetEvent.NEWCONSENSUS);
+    	Reply reply0 = jtc.setEvents(SetEvent.CIRC, SetEvent.STREAM, SetEvent.ORCONN, SetEvent.BW, SetEvent.DEBUG, SetEvent.INFO, SetEvent.NOTICE, SetEvent.WARN, SetEvent.ERR, SetEvent.NEWDESC, SetEvent.ADDRMAP, SetEvent.AUTHDIR_NEWDESCS, SetEvent.DESCCHANGED, SetEvent.STATUS_GENERAL, SetEvent.STATUS_CLIENT, SetEvent.STATUS_SERVER, SetEvent.GUARD, SetEvent.NS, SetEvent.STREAM_BW, SetEvent.CLIENTS_SEEN, SetEvent.NEWCONSENSUS);
     	//Reply reply = jtc.saveConf();
     	//Reply reply = jtc.signal("RELOAD");
+    	Reply reply = jtc.signal(Signal.NEWNYM, Signal.DEBUG, Signal.CLEARDNSCACHE, Signal.DUMP, Signal.INT, Signal.RELOAD, Signal.TERM, Signal.USR1, Signal.USR2);
     	//Reply reply = jtc.getInfo("config-file");
     	//Reply reply = jtc.getInfo("version");
     	System.out.println("Reply msg: " + reply.getMessage());
