@@ -9,10 +9,6 @@ import com.mountainsofmars.jtorcontroller.setevent.SetEvent;
 import com.mountainsofmars.jtorcontroller.signal.Signal;
 import com.mountainsofmars.jtorcontroller.torcommand.TorCommand;
 
-/**
- * Ben Tate
- * Date: Oct 13, 2009
- */
 public class JTorController {
 
     private static final Logger logger = Logger.getLogger(Application.class);

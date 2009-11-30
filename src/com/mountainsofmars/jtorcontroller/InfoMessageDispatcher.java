@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import com.mountainsofmars.jtorcontroller.listenerevent.TorListenerEvent;
-
 public class InfoMessageDispatcher extends Thread {
 	private static List<InfoListener> listeners = new ArrayList<InfoListener>();
 	private static Queue<String> messageQueue = new LinkedBlockingQueue<String>();
@@ -20,7 +18,6 @@ public class InfoMessageDispatcher extends Thread {
 	}
 	
 	public void run() {
-		System.out.println("IMD RUNNING!");
 		String message = null;
 		while(true) {
 			try {

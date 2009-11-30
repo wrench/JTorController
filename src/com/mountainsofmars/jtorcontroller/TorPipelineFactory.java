@@ -8,10 +8,6 @@ import org.jboss.netty.handler.codec.frame.Delimiters;
 import org.jboss.netty.handler.codec.string.StringDecoder;
 import org.jboss.netty.handler.codec.string.StringEncoder;
 
-/**
- * Ben Tate
- * Date: Oct 9, 2009
- */
 public class TorPipelineFactory implements org.jboss.netty.channel.ChannelPipelineFactory {
 
     private final ChannelHandler handler;

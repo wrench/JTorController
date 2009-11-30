@@ -6,12 +6,8 @@ import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.jboss.netty.channel.ChannelFuture;
 import java.util.concurrent.Executors;
 import java.net.InetSocketAddress;
-/**
- * Ben Tate
- * Date: Oct 13, 2009
- */
-public class TorCommunicator implements Runnable {
 
+public class TorCommunicator implements Runnable {
     private static final Logger logger = Logger.getLogger(TorCommunicator.class);
     private TorProtocolHandler chandler;
     private String host;

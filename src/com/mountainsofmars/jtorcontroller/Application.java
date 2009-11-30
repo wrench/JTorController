@@ -42,12 +42,13 @@ public class Application implements TorListener, InfoListener {
     	//reply = jtc.getConf("MaxCircuitDirtiness");
     	//System.out.println("Reply msg: " + reply.getMessage());
     	//Reply reply = jtc.setEvents(this, "CIRC", "STREAM", "ORCONN");
-    	Reply reply = jtc.setEvents(this, SetEvent.INFO, SetEvent.CIRC, SetEvent.BW);
+    	//Reply reply = jtc.setEvents(this, SetEvent.INFO, SetEvent.CIRC, SetEvent.BW);
+    	Reply reply = jtc.setEvents(this, SetEvent.CIRC, SetEvent.STREAM, SetEvent.ORCONN, SetEvent.BW, SetEvent.DEBUG, SetEvent.INFO, SetEvent.NOTICE, SetEvent.WARN, SetEvent.ERR, SetEvent.NEWDESC, SetEvent.ADDRMAP, SetEvent.AUTHDIR_NEWDESCS, SetEvent.DESCCHANGED, SetEvent.STATUS_GENERAL, SetEvent.STATUS_CLIENT, SetEvent.STATUS_SERVER, SetEvent.GUARD, SetEvent.NS, SetEvent.STREAM_BW, SetEvent.CLIENTS_SEEN, SetEvent.NEWCONSENSUS);
     	//Reply reply = jtc.saveConf();
     	//Reply reply = jtc.signal("RELOAD");
     	//Reply reply = jtc.getInfo("config-file");
     	//Reply reply = jtc.getInfo("version");
-    	//System.out.println("Reply msg: " + reply.getMessage());
+    	System.out.println("Reply msg: " + reply.getMessage());
     	
     }
     

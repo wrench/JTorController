@@ -6,10 +6,6 @@ import java.util.Queue;
 import com.mountainsofmars.jtorcontroller.listenerevent.TorListenerEvent;
 import com.mountainsofmars.jtorcontroller.reply.*;
 
-/**
- * Ben Tate
- * Date: Oct 13, 2009
- */
 @ChannelPipelineCoverage("one")
 public class TorProtocolHandler extends SimpleChannelHandler {
 
