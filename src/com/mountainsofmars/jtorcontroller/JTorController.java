@@ -36,37 +36,42 @@ public class JTorController {
         tCThread.start();
     }
 
-    public Reply authenticate() {
-        Reply reply = null;
+    public Reply authenticate() { // 3.5
         TorCommand cmd = TorCommand.AUTHENTICATE;
         return sendMsg(cmd.getCommandString());
     }
     
-    public Reply authenticate(String password) {
+    public Reply authenticate(String password) { // 3.5
     	TorCommand cmd = TorCommand.AUTHENTICATE;
     	String cmdString = cmd.getCommandString() + " \"" + password + "\"";
     	return sendMsg(cmdString);
     } 
     
-    public Reply authenticateCookiePassword() {
+    public Reply authenticateCookiePassword() { // 3.5
     	//TODO Add method body. This does not work.
     	Reply reply = null;
     	return reply;
     }
     
-    public Reply setConf(String keyword, String value) {
+    public Reply setConf(String keyword, String value) { // 3.1
     	TorCommand cmd = TorCommand.SETCONF; //TODO Add varargs for multiple property value pairs, maybe?
     	String cmdString = cmd.getCommandString() + " " + keyword + "=" + value;
     	return sendMsg(cmdString);
     }
     
-    public Reply getConf(String keyword) {
+    public Reply resetConf(String keyword) { // 3.2
+    	TorCommand cmd = TorCommand.RESETCONF;
+    	String cmdString = cmd.getCommandString() + " " + keyword;
+    	return sendMsg(cmdString);
+    }
+    
+    public Reply getConf(String keyword) { // 3.3
     	TorCommand cmd = TorCommand.GETCONF;
     	String cmdString = cmd.getCommandString() + " " + keyword;
     	return sendMsg(cmdString);
     }
     
-    public Reply setEvents(SetEvent... setEvents) {
+    public Reply setEvents(SetEvent... setEvents) { // 3.4
     	TorCommand cmd = TorCommand.SETEVENTS;
     	StringBuilder cmdString = new StringBuilder(cmd.getCommandString());
     	for(SetEvent curSetEvent : setEvents) {
@@ -74,6 +79,43 @@ public class JTorController {
     		cmdString.append(curSetEvent.getsetEventString());
     	}
     	return sendMsg(cmdString.toString());
+    }
+    
+    public Reply saveConf() { // 3.6
+    	TorCommand cmd = TorCommand.SAVECONF;
+    	String cmdString = cmd.getCommandString();
+    	return sendMsg(cmdString);
+    }
+    
+    public Reply signal(Signal... signals) { // 3.7
+    	TorCommand cmd = TorCommand.SIGNAL;
+    	StringBuilder cmdString = new StringBuilder(cmd.getCommandString());
+    	for(Signal signal : signals) {
+    		cmdString.append(" ");
+    		cmdString.append(signal.getSignalString());
+    	}
+    	return sendMsg(cmdString.toString());
+    }
+    
+    public Reply signal(String... signals) { // 3.7
+    	TorCommand cmd = TorCommand.SIGNAL;
+    	StringBuilder cmdString = new StringBuilder(cmd.getCommandString());
+    	for(String signal : signals) {
+    		cmdString.append(" ");
+    		cmdString.append(signal);
+    	}
+    	return sendMsg(cmdString.toString());
+    }
+    
+    public Reply mapAddress(String oldAddress, String newAddress) { // 3.8
+    	//TODO Implement method.
+    	return new FailureReply("Fix ME");
+    }
+    
+    public Reply getInfo(String keyword) { // 3.9  TODO Handle multi-line key/value replies.
+    	TorCommand cmd = TorCommand.GETINFO;
+    	String cmdString = cmd.getCommandString() + " " + keyword;
+    	return sendMsg(cmdString);
     }
     
     public Reply setEvents(String... setEvents) {
@@ -86,42 +128,13 @@ public class JTorController {
     	return sendMsg(cmdString.toString());
     }
     
-    public Reply saveConf() {
-    	TorCommand cmd = TorCommand.SAVECONF;
-    	String cmdString = cmd.getCommandString();
-    	return sendMsg(cmdString);
-    }
     
-    public Reply signal(Signal... signals) { 
-    	TorCommand cmd = TorCommand.SIGNAL;
-    	StringBuilder cmdString = new StringBuilder(cmd.getCommandString());
-    	for(Signal signal : signals) {
-    		cmdString.append(" ");
-    		cmdString.append(signal.getSignalString());
-    	}
-    	return sendMsg(cmdString.toString());
-    }
     
-    public Reply signal(String... signals) { 
-    	TorCommand cmd = TorCommand.SIGNAL;
-    	StringBuilder cmdString = new StringBuilder(cmd.getCommandString());
-    	for(String signal : signals) {
-    		cmdString.append(" ");
-    		cmdString.append(signal);
-    	}
-    	return sendMsg(cmdString.toString());
-    }
     
-    public Reply mapAddress(String oldAddress, String newAddress) {
-    	//TODO Implement method.
-    	return new FailureReply("Fix ME");
-    }
     
-    public Reply getInfo(String keyword) { //TODO Floods BQ even with one keyword.
-    	TorCommand cmd = TorCommand.GETINFO;
-    	String cmdString = cmd.getCommandString() + " " + keyword;
-    	return sendMsg(cmdString);
-    }
+   
+    
+    
         
     private Reply sendMsg(String message) {
     	Reply reply = null;

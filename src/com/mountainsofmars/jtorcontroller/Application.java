@@ -32,22 +32,25 @@ public class Application implements TorListener {
     
     public void onAuthenticationSuccess() {
     	System.out.println("Authentication Succeeded!");
-    	//Reply reply = jtc.setConf("Nickname", "wrench");
+    	Reply reply = jtc.setConf("Nickname", "wrench");
     	//Reply reply = jtc.setConf("MaxCircuitDirtiness", "100");
     	//System.out.println("Reply msg: " + reply.getMessage());
-    	//reply = jtc.getConf("Nickname");
+    	reply = jtc.getConf("Nickname");
     	//reply = jtc.getConf("MaxCircuitDirtiness");
-    	//System.out.println("Reply msg: " + reply.getMessage());
+    	System.out.println("Reply msg: " + reply.getMessage());
     	//Reply reply = jtc.setEvents(this, "CIRC", "STREAM", "ORCONN");
     	//Reply reply = jtc.setEvents(this, SetEvent.INFO, SetEvent.CIRC, SetEvent.BW);
-    	Reply reply0 = jtc.setEvents(SetEvent.CIRC, SetEvent.STREAM, SetEvent.ORCONN, SetEvent.BW, SetEvent.DEBUG, SetEvent.INFO, SetEvent.NOTICE, SetEvent.WARN, SetEvent.ERR, SetEvent.NEWDESC, SetEvent.ADDRMAP, SetEvent.AUTHDIR_NEWDESCS, SetEvent.DESCCHANGED, SetEvent.STATUS_GENERAL, SetEvent.STATUS_CLIENT, SetEvent.STATUS_SERVER, SetEvent.GUARD, SetEvent.NS, SetEvent.STREAM_BW, SetEvent.CLIENTS_SEEN, SetEvent.NEWCONSENSUS);
+    	//Reply reply0 = jtc.setEvents(SetEvent.CIRC, SetEvent.STREAM, SetEvent.ORCONN, SetEvent.BW, SetEvent.DEBUG, SetEvent.INFO, SetEvent.NOTICE, SetEvent.WARN, SetEvent.ERR, SetEvent.NEWDESC, SetEvent.ADDRMAP, SetEvent.AUTHDIR_NEWDESCS, SetEvent.DESCCHANGED, SetEvent.STATUS_GENERAL, SetEvent.STATUS_CLIENT, SetEvent.STATUS_SERVER, SetEvent.GUARD, SetEvent.NS, SetEvent.STREAM_BW, SetEvent.CLIENTS_SEEN, SetEvent.NEWCONSENSUS);
     	//Reply reply = jtc.saveConf();
     	//Reply reply = jtc.signal("RELOAD");
-    	Reply reply = jtc.signal(Signal.NEWNYM, Signal.DEBUG, Signal.CLEARDNSCACHE, Signal.DUMP, Signal.INT, Signal.RELOAD, Signal.TERM, Signal.USR1, Signal.USR2);
+    	//Reply reply = jtc.signal(Signal.NEWNYM, Signal.DEBUG, Signal.CLEARDNSCACHE, Signal.DUMP, Signal.INT, Signal.RELOAD, Signal.TERM, Signal.USR1, Signal.USR2);
     	//Reply reply = jtc.getInfo("config-file");
     	//Reply reply = jtc.getInfo("version");
+    	reply = jtc.resetConf("Nickname");
     	System.out.println("Reply msg: " + reply.getMessage());
-    	
+    	reply = jtc.getConf("Nickname");
+    	//reply = jtc.getConf("MaxCircuitDirtiness");
+    	System.out.println("Reply msg: " + reply.getMessage());
     }
     
     public void onAuthenticationFailure() {

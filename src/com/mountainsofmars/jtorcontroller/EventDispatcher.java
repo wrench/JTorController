@@ -5,13 +5,11 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 import com.mountainsofmars.jtorcontroller.listenerevent.TorListenerEvent;
-import com.mountainsofmars.jtorcontroller.listenerevent.TorListenerEventType;
 
 public class EventDispatcher extends Thread {
 	private static List<TorListener> listeners = new ArrayList<TorListener>();
 	private static Queue<TorListenerEvent> eventQueue = new LinkedBlockingQueue<TorListenerEvent>();
 	
-
 	static void fireEvent(TorListenerEvent evt) {
 		eventQueue.add(evt);
 	}
