@@ -112,9 +112,10 @@ public class JTorController {
     	return new FailureReply("Fix ME");
     }
     
-    public Reply getInfo(String keyword) { // 3.9  TODO Handle multi-line key/value replies.
+    public Reply getInfo(String keyword) { // 3.9  TODO Handle multi-line key/value replies. //TODO Floods BQ. Also frame error: org.jboss.netty.handler.codec.frame.TooLongFrameException: The frame length exceeds 8192: 39976.
     	TorCommand cmd = TorCommand.GETINFO;
     	String cmdString = cmd.getCommandString() + " " + keyword;
+    	handler.setGetInfoMode();
     	return sendMsg(cmdString);
     }
     
@@ -127,14 +128,6 @@ public class JTorController {
     	}
     	return sendMsg(cmdString.toString());
     }
-    
-    
-    
-    
-    
-   
-    
-    
         
     private Reply sendMsg(String message) {
     	Reply reply = null;

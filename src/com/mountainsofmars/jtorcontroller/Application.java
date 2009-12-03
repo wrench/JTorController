@@ -2,8 +2,6 @@ package com.mountainsofmars.jtorcontroller;
 
 import com.mountainsofmars.jtorcontroller.reply.Reply;
 import com.mountainsofmars.jtorcontroller.reply.SuccessReply;
-import com.mountainsofmars.jtorcontroller.setevent.SetEvent;
-import com.mountainsofmars.jtorcontroller.signal.Signal;
 
 public class Application implements TorListener {
 
@@ -35,7 +33,7 @@ public class Application implements TorListener {
     	Reply reply = jtc.setConf("Nickname", "wrench");
     	//Reply reply = jtc.setConf("MaxCircuitDirtiness", "100");
     	//System.out.println("Reply msg: " + reply.getMessage());
-    	reply = jtc.getConf("Nickname");
+    	//reply = jtc.getConf("Nickname");
     	//reply = jtc.getConf("MaxCircuitDirtiness");
     	System.out.println("Reply msg: " + reply.getMessage());
     	//Reply reply = jtc.setEvents(this, "CIRC", "STREAM", "ORCONN");
@@ -44,11 +42,12 @@ public class Application implements TorListener {
     	//Reply reply = jtc.saveConf();
     	//Reply reply = jtc.signal("RELOAD");
     	//Reply reply = jtc.signal(Signal.NEWNYM, Signal.DEBUG, Signal.CLEARDNSCACHE, Signal.DUMP, Signal.INT, Signal.RELOAD, Signal.TERM, Signal.USR1, Signal.USR2);
-    	//Reply reply = jtc.getInfo("config-file");
+    	reply = jtc.getInfo("config-file version network-status");
     	//Reply reply = jtc.getInfo("version");
-    	reply = jtc.resetConf("Nickname");
-    	System.out.println("Reply msg: " + reply.getMessage());
-    	reply = jtc.getConf("Nickname");
+    	//reply = jtc.getInfo("network-status");
+//    	reply = jtc.resetConf("Nickname");
+    	//System.out.println("Reply msg: " + reply.getMessage());
+//    	reply = jtc.getConf("Nickname");
     	//reply = jtc.getConf("MaxCircuitDirtiness");
     	System.out.println("Reply msg: " + reply.getMessage());
     }

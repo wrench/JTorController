@@ -4,6 +4,8 @@ import org.apache.log4j.Logger;
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.jboss.netty.channel.ChannelFuture;
+
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.net.InetSocketAddress;
 

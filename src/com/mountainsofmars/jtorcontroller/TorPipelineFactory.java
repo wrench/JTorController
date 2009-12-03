@@ -18,9 +18,12 @@ public class TorPipelineFactory implements org.jboss.netty.channel.ChannelPipeli
 
     public ChannelPipeline getPipeline() throws Exception {
         ChannelPipeline pipeline = pipeline();
+//        pipeline.addLast("framer", new DelimiterBasedFrameDecoder(
+//                8192, Delimiters.lineDelimiter()
+//        ));
         pipeline.addLast("framer", new DelimiterBasedFrameDecoder(
-                8192, Delimiters.lineDelimiter()
-        ));
+              90000, Delimiters.lineDelimiter()
+      ));
         pipeline.addLast("decoder", new StringDecoder());
         pipeline.addLast("encoder", new StringEncoder());
         pipeline.addLast("handler", handler);
