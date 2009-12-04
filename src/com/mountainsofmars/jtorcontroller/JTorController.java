@@ -129,6 +129,10 @@ public class JTorController {
     	handler.setGetInfoMode();
     	return sendMsg(cmdString);
     }
+    
+//    public Reply extendCircuit() {
+//    	
+//    }
         
     private Reply sendMsg(String message) {
     	Reply reply = null;

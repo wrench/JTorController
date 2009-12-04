@@ -57,7 +57,7 @@ public class Application implements TorListener {
     	//reply = jtc.getConf("MaxCircuitDirtiness");
     	//Reply reply = jtc.mapAddress("1273232.192.10.10", "torproject.org");
     	System.out.println("Reply msg: " + reply.getMessage());
-    	writeToFile(reply.getMessage());
+    	//writeToFile(reply.getMessage());
     }
     
     public void onAuthenticationFailure() {
