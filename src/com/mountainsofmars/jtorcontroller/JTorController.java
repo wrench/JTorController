@@ -81,6 +81,16 @@ public class JTorController {
     	return sendMsg(cmdString.toString());
     }
     
+    public Reply setEvents(String... setEvents) { // 3.4
+    	TorCommand cmd = TorCommand.SETEVENTS;
+    	StringBuilder cmdString = new StringBuilder(cmd.getCommandString());
+    	for(String setEvent : setEvents) {
+    		cmdString.append(" ");
+    		cmdString.append(setEvent);
+    	}
+    	return sendMsg(cmdString.toString());
+    }
+    
     public Reply saveConf() { // 3.6
     	TorCommand cmd = TorCommand.SAVECONF;
     	String cmdString = cmd.getCommandString();
@@ -108,25 +118,16 @@ public class JTorController {
     }
     
     public Reply mapAddress(String oldAddress, String newAddress) { // 3.8
-    	//TODO Implement method.
-    	return new FailureReply("Fix ME");
+    	TorCommand cmd = TorCommand.MAPADDRESS;
+    	String cmdString = cmd.getCommandString() + " " + oldAddress + "=" + newAddress;
+    	return sendMsg(cmdString);
     }
     
-    public Reply getInfo(String keyword) { // 3.9  TODO Handle multi-line key/value replies. //TODO Floods BQ. Also frame error: org.jboss.netty.handler.codec.frame.TooLongFrameException: The frame length exceeds 8192: 39976.
+    public Reply getInfo(String keyword) { // 3.9  TODO Handle multiple keywords?.
     	TorCommand cmd = TorCommand.GETINFO;
     	String cmdString = cmd.getCommandString() + " " + keyword;
     	handler.setGetInfoMode();
     	return sendMsg(cmdString);
-    }
-    
-    public Reply setEvents(String... setEvents) {
-    	TorCommand cmd = TorCommand.SETEVENTS;
-    	StringBuilder cmdString = new StringBuilder(cmd.getCommandString());
-    	for(String setEvent : setEvents) {
-    		cmdString.append(" ");
-    		cmdString.append(setEvent);
-    	}
-    	return sendMsg(cmdString.toString());
     }
         
     private Reply sendMsg(String message) {

@@ -3,7 +3,6 @@ package com.mountainsofmars.jtorcontroller;
 import org.jboss.netty.channel.*;
 import org.apache.log4j.Logger;
 import java.util.Queue;
-
 import com.mountainsofmars.jtorcontroller.listenerevent.TorListenerEvent;
 import com.mountainsofmars.jtorcontroller.listenerevent.TorListenerEventType;
 import com.mountainsofmars.jtorcontroller.reply.*;
@@ -26,12 +25,11 @@ public class TorProtocolHandler extends SimpleChannelHandler {
     public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) {
 		Reply reply = null;
         String msg = (String) e.getMessage();
-        StringBuilder sb = null;
         logger.info("Message received from TOR: " + msg);
         if(msg.startsWith("650")) {
         	EventDispatcher.fireEvent(new TorListenerEvent(TorListenerEventType.INFO_MESSAGE, msg));
         	return;
-        } else if(msg.startsWith("250")) {
+        } else if(msg.startsWith("250") || !msg.startsWith("551") && !msg.startsWith("552")) { // This must be a 250 message or a GETINFO message that does NOT begin with a numerical code.
         	if(!getInfoMode) {
         		reply = new SuccessReply(msg); 
         	} else { // This must be a multiline response to a GETINFO call.
