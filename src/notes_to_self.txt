@@ -1,0 +1,1 @@
+Shorten methods in JTC that don't really need StringBuilders?

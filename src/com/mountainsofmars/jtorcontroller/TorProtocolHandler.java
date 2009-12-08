@@ -2,10 +2,12 @@ package com.mountainsofmars.jtorcontroller;
 
 import org.jboss.netty.channel.*;
 import org.apache.log4j.Logger;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import com.mountainsofmars.jtorcontroller.listenerevent.TorListenerEvent;
 import com.mountainsofmars.jtorcontroller.listenerevent.TorListenerEventType;
 import com.mountainsofmars.jtorcontroller.reply.*;
@@ -29,10 +31,10 @@ public class TorProtocolHandler extends SimpleChannelHandler {
 		Reply reply = null;
         String msg = (String) e.getMessage();
         logger.info("Message received from TOR: " + msg);
-        if(msg.startsWith("650")) {
+        if(msg.startsWith("650")) { // This is an info message event that will be handled by the EventDispatcher.
         	EventDispatcher.fireEvent(new TorListenerEvent(TorListenerEventType.INFO_MESSAGE, msg));
         	return;
-        } else if(msg.startsWith("250") || !msg.startsWith("551") && !msg.startsWith("552")) { // This must be a 250 prefixed message or a GETINFO message that does NOT begin with a numerical code.
+        } else if(msg.startsWith("250") || isNonNumericReply(msg)) { // This must be a 250 prefixed message or a GETINFO message that does NOT begin with a numerical code.
         	if(!getInfoMode) {
         		reply = new SuccessReply(msg); 
         	} else { // This must be a multiline response to a GETINFO call.
@@ -81,6 +83,16 @@ public class TorProtocolHandler extends SimpleChannelHandler {
     
     public void setGetInfoMode() {
     	this.getInfoMode = true;
+    }
+    
+    private boolean isNonNumericReply(String message) {
+    	Pattern pattern = Pattern.compile("[^0-9][^0-9][^0-9].*");
+		Matcher matcher = pattern.matcher(message);
+		if(matcher.matches()) {
+			return true;
+		} else {
+			return false;
+		}
     }
 }
 
